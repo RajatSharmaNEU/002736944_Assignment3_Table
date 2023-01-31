@@ -1,18 +1,14 @@
-//Title constructor function that creates a Title object
-function Title(t1) 
-{ this.mytitle = t1;
+const dropDownTextAreas = document.getElementsByClassName('dropDownTextArea');
+const displayContentIcons = document.querySelectorAll('tbody img');
+
+// Initially collapse the row's content
+for (const dropDownTextArea of dropDownTextAreas) {
+    dropDownTextArea.style.display = "none";
 }
 
-Title.prototype.getName = function () 
-{ 
-return (this.mytitle);
+// Add listener to toggle row's content
+for (let index = 0; index < displayContentIcons.length; index++) {
+    displayContentIcons[index].onclick = function () {
+        dropDownTextAreas[index].style.display = dropDownTextAreas[index].style.display === 'none' ? 'table-row' : 'none';
+    }
 }
-
-var socialMedia = {
-  facebook : 'http://facebook.com',
-  twitter: 'http://twitter.com',
-  flickr: 'http://flickr.com',
-  youtube: 'http://youtube.com'
-};
-
-var t = new Title("CONNECT WITH ME!");
