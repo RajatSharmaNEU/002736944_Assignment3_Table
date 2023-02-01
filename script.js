@@ -1,8 +1,18 @@
 // Utilities
+// Set Display Style
+const styleNone = 'none';
+const styleTableRow = 'table-row';
+const styleTableCell = 'table-cell';
+
+const setDisplay = function (element, style) {
+    element.style.display = style;
+}
+
 // Toggle Row content
 const toggleDisplay = function (element) {
     return () => {
-        element.style.display = element.style.display === 'none' ? 'table-row' : 'none'
+        const toggledStyle =  element.style.display === styleNone ? styleTableRow : styleNone;
+        setDisplay(element, toggledStyle);
     };
 }
 
@@ -20,16 +30,16 @@ const handleDeleteRow = function (row) {
 
 // Row Selection
 const handleCheckbox = function (e, currentRow) {
-    const DeleteColumn = currentRow.querySelector('td:nth-last-child(2)');
-    const EditColumn = currentRow.querySelector('td:last-child');
+    const deleteColumn = currentRow.querySelector('td:nth-last-child(2)');
+    const editColumn = currentRow.querySelector('td:last-child');
 
     if (e.target.checked) {
-        DeleteColumn.style.display = 'table-cell';
-        EditColumn.style.display = 'table-cell';
-        currentRow.style.backgroundColor = "orange";
+        setDisplay(deleteColumn, styleTableCell);
+        setDisplay(editColumn, styleTableCell);
+        currentRow.style.backgroundColor = "yellow";
     } else {
-        DeleteColumn.style.display = 'none';
-        EditColumn.style.display = 'none';
+        setDisplay(deleteColumn, styleNone);
+        setDisplay(editColumn, styleNone);
         currentRow.style.backgroundColor = "";
     }
 }
@@ -37,7 +47,7 @@ const handleCheckbox = function (e, currentRow) {
 // Edit Row & it's content
 const handleEditRow = function (row) {
     return () => {
-        alert(`Edit ${row.querySelector('td:nth-child(2)').innerHTML} details.`);
+        prompt(`Edit ${row.querySelector('td:nth-child(2)').innerHTML} details.`);
     }
 }
 
@@ -55,7 +65,7 @@ const headEditColumn = document.querySelector('th:last-child');
 
 // Initially collapse the row's content
 for (const dropDownTextArea of dropDownTextAreas) {
-    dropDownTextArea.style.display = "none";
+    setDisplay(dropDownTextArea, styleNone);
 }
 
 // Add listener to toggle row's content
@@ -63,21 +73,23 @@ for (let index = 0; index < displayContentIcons.length; index++) {
     displayContentIcons[index].onclick = toggleDisplay(dropDownTextAreas[index]);
 }
 
-// Hide delete and edit button for initial rows
+// Hide delete and edit button columns for initial rows & header
+setDisplay(headDeleteColumn, styleNone);
+setDisplay(headEditColumn, styleNone);
+
 initialTableRows.forEach(currentRow => {
     const rowDeleteColumn = currentRow.querySelector('td:nth-last-child(2)');
     const rowEditColumn = currentRow.querySelector('td:last-child');
-    headDeleteColumn.style.display = 'none';
-    rowDeleteColumn.style.display = 'none';
-    headEditColumn.style.display = 'none';
-    rowEditColumn.style.display = 'none';
+    setDisplay(rowDeleteColumn, styleNone);
+    setDisplay(rowEditColumn, styleNone);
 });
 
 tbody.addEventListener('click', () => {
     const checkedRows = document.querySelectorAll('tbody tr:not(.dropDownTextArea) input[type="checkbox"]:checked');
     submitBtn.disabled = checkedRows.length === 0;
-    headDeleteColumn.style.display = checkedRows.length ? 'table-cell' : 'none';
-    headEditColumn.style.display = checkedRows.length ? 'table-cell' : 'none';
+    const headColumnDisplay = checkedRows.length ? 'table-cell' : 'none';
+    setDisplay(headDeleteColumn, headColumnDisplay);
+    setDisplay(headEditColumn, headColumnDisplay);
 })
 
 // Add listener to select, delete and edit row
@@ -127,7 +139,7 @@ addNewStudentButton.onclick = function () {
                 Comments:<br/><br/><br/>
                 Award Status:<br/><br/><br/>
            </td>`;
-    newStudentRowContent.style.display = 'none';
+    setDisplay(newStudentRowContent, styleNone);
 
     tbody.append(newStudentRow);
     tbody.append(newStudentRowContent);
