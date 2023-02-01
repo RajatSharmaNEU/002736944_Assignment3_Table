@@ -10,8 +10,8 @@ const toggleDisplay = function (element) {
 const handleDeleteRow = function (row) {
     return () => {
         const confirmSelection = confirm(`Do you want to delete ${row.querySelector('td:nth-child(2)').innerHTML} details ?`);
-        if(confirmSelection) {
-            row.remove();
+        if (confirmSelection) {
+            row.nextElementSibling.remove();
             row.remove();
             alert(`${row.querySelector('td:nth-child(2)').innerHTML} delete successfully.`);
         }
@@ -19,17 +19,18 @@ const handleDeleteRow = function (row) {
 }
 
 // Row Selection
-const handleCheckbox = function (e, buttons, currentRow) {
+const handleCheckbox = function (e, currentRow) {
+    const DeleteColumn = currentRow.querySelector('td:nth-last-child(2)');
+    const EditColumn = currentRow.querySelector('td:last-child');
+
     if (e.target.checked) {
-        buttons.forEach(button => {
-            button.style.display = 'inline-block';
-        });
-        currentRow.style.backgroundColor="orange";
+        DeleteColumn.style.display = 'table-cell';
+        EditColumn.style.display = 'table-cell';
+        currentRow.style.backgroundColor = "orange";
     } else {
-        buttons.forEach(button => {
-            button.style.display = 'none';
-        });
-        currentRow.style.backgroundColor="";
+        DeleteColumn.style.display = 'none';
+        EditColumn.style.display = 'none';
+        currentRow.style.backgroundColor = "";
     }
 }
 
@@ -48,6 +49,9 @@ const dropDownTextAreas = document.getElementsByClassName('dropDownTextArea');
 const displayContentIcons = document.querySelectorAll('tbody img');
 const addNewStudentButton = document.getElementById('add');
 const initialTableRows = document.querySelectorAll('tbody tr:not(.dropDownTextArea)');
+const submitBtn = document.getElementById('button');
+const headDeleteColumn = document.querySelector('th:nth-last-child(2)');
+const headEditColumn = document.querySelector('th:last-child');
 
 // Initially collapse the row's content
 for (const dropDownTextArea of dropDownTextAreas) {
@@ -60,16 +64,20 @@ for (let index = 0; index < displayContentIcons.length; index++) {
 }
 
 // Hide delete and edit button for initial rows
-initialTableRows.forEach(tableRow => {
-    const buttons = tableRow.querySelectorAll('button');
-    buttons.forEach(button => {
-        button.style.display = 'none';
-    });
+initialTableRows.forEach(currentRow => {
+    const rowDeleteColumn = currentRow.querySelector('td:nth-last-child(2)');
+    const rowEditColumn = currentRow.querySelector('td:last-child');
+    headDeleteColumn.style.display = 'none';
+    rowDeleteColumn.style.display = 'none';
+    headEditColumn.style.display = 'none';
+    rowEditColumn.style.display = 'none';
 });
 
 tbody.addEventListener('click', () => {
     const checkedRows = document.querySelectorAll('tbody tr:not(.dropDownTextArea) input[type="checkbox"]:checked');
-    document.getElementById('button').disabled = checkedRows.length === 0;
+    submitBtn.disabled = checkedRows.length === 0;
+    headDeleteColumn.style.display = checkedRows.length ? 'table-cell' : 'none';
+    headEditColumn.style.display = checkedRows.length ? 'table-cell' : 'none';
 })
 
 // Add listener to select, delete and edit row
@@ -77,7 +85,7 @@ for (let index = 0; index < initialTableRows.length; index++) {
     const currentRow = initialTableRows[index];
     const checkbox = currentRow.querySelector('td:first-child input[type="checkbox"]');
     const buttons = currentRow.querySelectorAll('button');
-    checkbox.onchange = e => handleCheckbox(e, buttons, currentRow);
+    checkbox.onchange = e => handleCheckbox(e, currentRow);
     buttons[0].onclick = handleDeleteRow(currentRow);
     buttons[1].onclick = handleEditRow(currentRow);
 }
@@ -101,11 +109,11 @@ addNewStudentButton.onclick = function () {
         <td>TA</td>
         <td>12345</td>
         <td>100%</td>
-        <td>
-            <button style="display: none">Delete</button>
+        <td style="display: none">
+            <button>Delete</button>
         </td>
-        <td>
-            <button style="display: none">Edit</button>
+        <td style="display: none">
+            <button>Edit</button>
         </td>
         `;
     newStudentRowContent.classList.add('dropDownTextArea');
@@ -130,7 +138,7 @@ addNewStudentButton.onclick = function () {
     // Table Row Handlers - Delete, Edit and Checkbox Selection
     const checkbox = newStudentRow.querySelector('td:first-child input[type="checkbox"]');
     const buttons = newStudentRow.querySelectorAll('button');
-    checkbox.onchange = e => handleCheckbox(e, buttons, newStudentRow);
+    checkbox.onchange = e => handleCheckbox(e, newStudentRow);
     buttons[0].onclick = handleDeleteRow(newStudentRow);
     buttons[1].onclick = handleEditRow(newStudentRow);
 
