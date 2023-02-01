@@ -1,9 +1,35 @@
+// Utilities
+// Toggle Row content
+const toggleDisplay = function (element) {
+    return () => {
+        element.style.display = element.style.display === 'none' ? 'table-row' : 'none'
+    };
+}
+
+// Delete Row & it's content
+const handleDeleteRow = function (row) {
+    return () => {
+        row.remove();
+        row.remove();
+        alert(`${row.querySelector('td:nth-child(2)').innerHTML} delete successfully.`);
+    }
+}
+
+// Edit Row & it's content
+const handleEditRow = function (row) {
+    return () => {
+        alert(`Edit ${row.querySelector('td:nth-child(2)').innerHTML} details.`);
+    }
+}
+
+// Main Code
 let initialRowCount = 3;
 
 const tbody = document.getElementsByTagName('tbody')[0];
 const dropDownTextAreas = document.getElementsByClassName('dropDownTextArea');
 const displayContentIcons = document.querySelectorAll('tbody img');
 const addNewStudentButton = document.getElementById('add');
+const initialTableRows = document.querySelectorAll('tbody tr:not(.dropDownTextArea)');
 
 // Initially collapse the row's content
 for (const dropDownTextArea of dropDownTextAreas) {
@@ -12,9 +38,15 @@ for (const dropDownTextArea of dropDownTextAreas) {
 
 // Add listener to toggle row's content
 for (let index = 0; index < displayContentIcons.length; index++) {
-    displayContentIcons[index].onclick = function () {
-        dropDownTextAreas[index].style.display = dropDownTextAreas[index].style.display === 'none' ? 'table-row' : 'none';
-    }
+    displayContentIcons[index].onclick = toggleDisplay(dropDownTextAreas[index]);
+}
+
+// Add listener to delete row 
+for (let index = 0; index < initialTableRows.length; index++) {
+    const currentRow = initialTableRows[index];
+    const buttons = currentRow.querySelectorAll('button');
+    buttons[0].onclick = handleDeleteRow(currentRow);
+    buttons[1].onclick = handleEditRow(currentRow);
 }
 
 // Add new student
@@ -60,15 +92,16 @@ addNewStudentButton.onclick = function () {
     tbody.append(newStudentRowContent);
 
     const newStudentRowImg = newStudentRow.getElementsByTagName('img')[0];
-
-    newStudentRowImg.addEventListener('click', e => {
-        newStudentRowContent.style.display = newStudentRowContent.style.display === 'none' ? 'table-row' : 'none';
-    });
+    newStudentRowImg.onclick = toggleDisplay(newStudentRowContent);
 
     // TODO: Add Delete, Edit and Checkbox Selection
+    const buttons = newStudentRow.querySelectorAll('button');
+    buttons[0].onclick = handleDeleteRow(newStudentRow);
+    buttons[1].onclick = handleEditRow(newStudentRow);
 
     setTimeout(() => {
-        alert(`Added new record for Student ${initialRowCount}`);
+        alert(`Added new record for Student ${initialRowCount}.`);
     });
 }
+
 
