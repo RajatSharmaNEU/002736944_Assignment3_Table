@@ -12,3 +12,6 @@ Main feature of Assignment 3 -
 5. toggleDisplay - Function to toggle row display.
 6. initialize - Wrapper that contains all the initialization code to attach & set required feature on existing html.
 7. addNewStudent - handler to add new student. It creates new innerHTML and add required listener on all CTA.
+
+
+How to run - open table.html in browser.

@@ -145,22 +145,26 @@ const addNewStudent = function () {
            </td>`;
     setDisplay(newStudentRowContent, styleNone);
 
-    tbody.append(newStudentRow);
-    tbody.append(newStudentRowContent);
+    try {
+        tbody.append(newStudentRow);
+        tbody.append(newStudentRowContent);
 
-    const newStudentRowImg = newStudentRow.getElementsByTagName('img')[0];
-    newStudentRowImg.onclick = toggleDisplay(newStudentRowContent);
+        const newStudentRowImg = newStudentRow.getElementsByTagName('img')[0];
+        newStudentRowImg.onclick = toggleDisplay(newStudentRowContent);
 
-    // Table Row Handlers - Delete, Edit and Checkbox Selection
-    const checkbox = newStudentRow.querySelector('td:first-child input[type="checkbox"]');
-    const buttons = newStudentRow.querySelectorAll('button');
-    checkbox.onchange = e => handleCheckbox(e, newStudentRow);
-    buttons[0].onclick = handleDeleteRow(newStudentRow);
-    buttons[1].onclick = handleEditRow(newStudentRow);
+        // Table Row Handlers - Delete, Edit and Checkbox Selection
+        const checkbox = newStudentRow.querySelector('td:first-child input[type="checkbox"]');
+        const buttons = newStudentRow.querySelectorAll('button');
+        checkbox.onchange = e => handleCheckbox(e, newStudentRow);
+        buttons[0].onclick = handleDeleteRow(newStudentRow);
+        buttons[1].onclick = handleEditRow(newStudentRow);
 
-    setTimeout(() => {
-        alert(`Added new record for Student ${initialRowCount}.`);
-    });
+        setTimeout(() => {
+            alert(`Added new record for Student ${initialRowCount}.`);
+        });
+    } catch (e) {
+        alert('Error: Failed to add new student. Please try again.');
+    }
 }
 
 initialize();
