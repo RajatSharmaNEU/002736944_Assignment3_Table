@@ -25,6 +25,11 @@ const handleDeleteRow = function (row) {
             row.remove();
             alert(`${row.querySelector('td:nth-child(2)').innerHTML} delete successfully.`);
         }
+
+        // Reset Student number if all rows deleted
+        if(tbody.querySelectorAll('tr').length === 0) {
+            initialRowCount = 0;
+        }
     }
 }
 
